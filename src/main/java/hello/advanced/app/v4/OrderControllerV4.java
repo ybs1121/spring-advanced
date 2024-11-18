@@ -1,24 +1,24 @@
-package hello.advanced.v2;
+package hello.advanced.app.v4;
 
 import hello.advanced.trace.TraceStatus;
-import hello.advanced.trace.hellotrace.HelloTraceV2;
+import hello.advanced.trace.logtrace.LogTrace;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-public class OrderControllerV2 {
+public class OrderControllerV4 {
 
-    private final OrderServiceV2 orderService;
-    private final HelloTraceV2 trace;
+    private final OrderServiceV4 orderService;
+    private final LogTrace trace;
 
-    @GetMapping("/v2/request")
+    @GetMapping("/v4/request")
     private String request(String itemId) {
         TraceStatus begin = null;
         try {
             begin = trace.begin("OrderControllerV2.request()");
-            orderService.orderItem(itemId, begin.getTraceId());
+            orderService.orderItem(itemId);
             trace.end(begin);
             return "ok";
         } catch (Exception e) {
