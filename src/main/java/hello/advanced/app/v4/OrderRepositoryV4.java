@@ -2,6 +2,7 @@ package hello.advanced.app.v4;
 
 import hello.advanced.trace.TraceStatus;
 import hello.advanced.trace.logtrace.LogTrace;
+import hello.advanced.trace.template.AbstractTemplate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -9,24 +10,18 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class OrderRepositoryV4 {
 
-    private final LogTrace  trace;
+    private final LogTrace trace;
 
     public void save(String itemId) {
         // 저장로직
-
-        TraceStatus begin = null;
-        try {
-            begin = trace.begin( "OrderRepositoryV1.save()");
-            if (itemId.equals("ex")) {
-                throw new IllegalStateException("예외 발생!");
+        AbstractTemplate<Void> template = new AbstractTemplate<>(trace) {
+            @Override
+            protected Void call() {
+                sleep(1000);
+                return null;
             }
-            sleep(1000);
-            trace.end(begin);
-        } catch (Exception e) {
-            trace.exception(begin, e);
-            throw e;
-        }
-
+        };
+        template.execute("OrderRepositoryV4.save()");
 
     }
 
